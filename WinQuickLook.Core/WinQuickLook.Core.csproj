@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>WinQuickLook</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+    <PackageReference Include="Cylinder.WPF" Version="1.0.0-preview.2" />
+    <PackageReference Include="Markdig" Version="0.38.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2849.39" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinQuickLook.CsWin32\WinQuickLook.CsWin32.csproj" />
+  </ItemGroup>
+
+</Project>

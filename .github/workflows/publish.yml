@@ -4,28 +4,25 @@ on:
   push:
     tags: [ v* ]
 
-permissions:
-  contents: read
-
 env:
-  DOTNET_VERSION: 10.0.x
+  DOTNET_VERSION: 8.0.x
   BUNDLE_PLATFORMS: x64|arm64
 
 jobs:
   publish:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Use .NET ${{ env.DOTNET_VERSION }}
-      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Use MSBuild
-      uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3.0.0
+      uses: microsoft/setup-msbuild@v2
 
     - name: Setup Version
       id: setup_version
@@ -35,7 +32,7 @@ jobs:
     - name: Update package manifest
       run: |
         [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
-        $path = "src\WinQuickLook.Package\package.appxmanifest"
+        $path = "WinQuickLook.Package/package.appxmanifest"
         $doc = [System.Xml.Linq.XDocument]::Load($path)
         $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
         $doc.Root.Element($xName).Attribute("Version").Value = "${{ steps.setup_version.outputs.VERSION }}.0";
@@ -43,7 +40,7 @@ jobs:
 
     - name: Build application
       run: >
-        msbuild .\src\WinQuickLook.slnx
+        msbuild .\WinQuickLook.sln
         /Restore
         /p:Configuration=Release
         /p:Version="${{ steps.setup_version.outputs.VERSION }}"
@@ -57,7 +54,7 @@ jobs:
         /verbosity:minimal
 
     - name: Upload MSIX
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@v4
       with:
         name: msix
         path: packed\*.msixupload
